@@ -206,6 +206,6 @@ If you find this project helpful, please give it a ⭐ on GitHub!
 
 ---
 
-**Built with ❤️ by [Sahand Ghavidel](https://github.com/sahandghavidel)**
+**Built with ❤️ by [Vinayak_Pol](https://github.com/vinayak-pol003)**
 
 _Demonstrating modern full-stack development with AI integration, completely free to build and deploy._
