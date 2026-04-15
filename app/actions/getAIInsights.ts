@@ -2,6 +2,7 @@
 
 import { checkUser } from '@/lib/checkUser';
 import { db } from '@/lib/db';
+import { Prisma } from '@prisma/client';
 import { generateExpenseInsights, AIInsight, ExpenseRecord } from '@/lib/ai';
 
 export async function getAIInsights(): Promise<AIInsight[]> {
@@ -65,6 +66,20 @@ export async function getAIInsights(): Promise<AIInsight[]> {
     const insights = await generateExpenseInsights(expenseData);
     return insights;
   } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P1001') {
+      return [
+        {
+          id: 'error-1',
+          type: 'warning',
+          title: 'Insights Temporarily Unavailable',
+          message:
+            'Your database connection is currently unavailable, so AI insights cannot be generated right now.',
+          action: 'Retry analysis',
+          confidence: 0.5,
+        },
+      ];
+    }
+
     console.error('Error getting AI insights:', error);
 
     // Return fallback insights

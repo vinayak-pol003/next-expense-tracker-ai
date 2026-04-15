@@ -4,7 +4,7 @@ import ExpenseStats from '@/components/ExpenseStats';
 import Guest from '@/components/Guest';
 import RecordChart from '@/components/RecordChart';
 import RecordHistory from '@/components/RecordHistory';
-import { currentUser } from '@clerk/nextjs/server';
+import { safeCurrentUser } from '@/lib/safeCurrentUser';
 
 // Helper for user timestamps (assumed to be UNIX ms)
 function formatDateFromUnix(timestamp: number | undefined) {
@@ -13,7 +13,7 @@ function formatDateFromUnix(timestamp: number | undefined) {
 }
 
 export default async function HomePage() {
-  const user = await currentUser();
+  const user = await safeCurrentUser();
   if (!user) {
     return <Guest />;
   }

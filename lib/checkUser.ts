@@ -1,8 +1,8 @@
-import { currentUser } from '@clerk/nextjs/server';
 import { db } from './db';
+import { safeCurrentUser } from './safeCurrentUser';
 
 export const checkUser = async () => {
-  const user = await currentUser();
+  const user = await safeCurrentUser();
 
   if (!user) {
     return null;

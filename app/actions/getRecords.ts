@@ -1,6 +1,7 @@
 'use server';
 import { db } from '@/lib/db';
 import { auth } from '@clerk/nextjs/server';
+import { Prisma } from '@prisma/client';
 import { Record } from '@/types/Record';
 
 async function getRecords(): Promise<{
@@ -24,6 +25,14 @@ async function getRecords(): Promise<{
 
     return { records };
   } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P1001') {
+      console.warn('Database is temporarily unreachable while fetching records.');
+      return {
+        error:
+          'Expense data is temporarily unavailable. Please check the database connection and try again.',
+      };
+    }
+
     console.error('Error fetching records:', error); // Log the error
     return { error: 'Database error' };
   }

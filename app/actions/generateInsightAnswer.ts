@@ -2,6 +2,7 @@
 
 import { checkUser } from '@/lib/checkUser';
 import { db } from '@/lib/db';
+import { Prisma } from '@prisma/client';
 import { generateAIAnswer, ExpenseRecord } from '@/lib/ai';
 
 export async function generateInsightAnswer(question: string): Promise<string> {
@@ -41,6 +42,10 @@ export async function generateInsightAnswer(question: string): Promise<string> {
     const answer = await generateAIAnswer(question, expenseData);
     return answer;
   } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P1001') {
+      return 'Your database connection is unavailable right now, so I cannot generate a detailed answer.';
+    }
+
     console.error('Error generating insight answer:', error);
     return "I'm unable to provide a detailed answer at the moment. Please try refreshing the insights or check your connection.";
   }
